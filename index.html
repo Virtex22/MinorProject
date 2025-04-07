@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAP - Task Management</title>
+    <link rel="stylesheet" href="index.css``">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-text">TAP</div>
+                <div class="logo-subtext">Track • Achieve • Progress</div>
+            </div>
+            <div class="profile-btn">
+                <div class="profile-icon">
+                    <button class="profile-head" onclick="window.location.href='profile.html'"></button>
+                    <button class="profile-body" onclick="window.location.href='profile.html'"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Block -->
+        <div class="welcome-block" id="welcomeBlock">
+            <div class="welcome-text">Welcome to TAP</div>
+            <div class="welcome-subtext">Your task management platform</div>
+            <div class="progress-circle">
+                <svg height="60" width="60" viewBox="0 0 60 60">
+                    <circle class="circle-bg" cx="30" cy="30" r="25" />
+                    <circle class="circle-progress" cx="30" cy="30" r="25" stroke-dasharray="157" stroke-dashoffset="81.64" />
+                </svg>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+        </div>
+
+        <!-- Category Buttons -->
+        <div class="category-buttons">
+            <div class="category-button active" data-filter="All">
+                <div class="category-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </div>
+                <div class="category-button-title">All</div>
+            </div>
+
+            <div class="category-button" data-filter="Activity">
+                <div class="category-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <div class="category-button-title">Activity</div>
+            </div>
+
+            <div class="category-button" data-filter="Urgent">
+                <div class="category-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="category-button-title">Urgent</div>
+            </div>
+
+            <div class="category-button" data-filter="Completed">
+                <div class="category-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <div class="category-button-title">Completed</div>
+                <div class="category-button-count">3 tasks</div>
+            </div>
+        </div>
+
+        <!-- Completed Tasks Section -->
+        <div class="completed-tasks-section">
+            <div class="completed-tasks-card">
+                <div class="completed-tasks-text">Completed Tasks</div>
+            </div>
+            <div class="completed-tasks-box" id="completedTasksBox">
+                <div class="completed-tasks-list" id="completedTasksList">
+                    <!-- Completed tasks will be dynamically populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Expanded Task Panels -->
+        <div class="expanded-panel" id="expandedPanel">
+            <div class="panel-header">
+                <div class="panel-title">All Tasks Overview</div>
+                <button class="add-task-btn">
+                    <!-- Add task button icon (currently commented out) -->
+                </button>
+            </div>
+            <div class="close-btn" id="closePanel"></div>
+            <div class="task-list">
+                <!-- Tasks will be dynamically populated here -->
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="window.location.href='addtask.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </div>
+            <div class="nav-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </div>
+            <div class="nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('.category-button');
+    const welcomeBlock = document.getElementById('welcomeBlock');
+    const expandedPanel = document.getElementById('expandedPanel');
+    const closePanel = document.getElementById('closePanel');
+    const taskList = document.querySelector('.task-list');
+    const completedTasksBox = document.getElementById('completedTasksBox');
+    const completedTasksList = document.getElementById('completedTasksList');
+    const progressText = document.getElementById('progressText');
+    const progressCircle = document.querySelector('.circle-progress');
+
+    // Update progress circle
+    function updateProgressCircle(totalTasks, completedTasks) {
+        if (totalTasks === 0) {
+            progressText.textContent = '0%';
+            progressCircle.style.strokeDashoffset = 157;
+            return;
+        }
+
+        const percentage = Math.round((completedTasks / totalTasks) * 100);
+        progressText.textContent = `${percentage}%`;
+        
+        // Calculate stroke dashoffset (157 is the circumference)
+        const dashoffset = 157 * (1 - (completedTasks / totalTasks));
+        progressCircle.style.strokeDashoffset = dashoffset;
+    }
+
+    // Task Status Toggle Function
+    function toggleTaskStatus(taskId) {
+        const checkbox = document.querySelector(`.checkbox[data-task-id="${taskId}"]`);
+        const currentStatus = checkbox.classList.contains('checked') ? 'Active' : 'Completed';
+        
+        fetch(`http://localhost:5000/tasks/${taskId}/toggle-status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: currentStatus })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update task status');
+            }
+            return response.json();
+        })
+        .then(() => {
+            // Toggle checkbox visual state
+            checkbox.classList.toggle('checked');
+            
+            // Refresh tasks to update UI
+            const activeFilter = document.querySelector('.category-button.active').dataset.filter;
+            fetchTasks(activeFilter);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Unable to update task status. Please try again.');
+        });
+    }
+
+    // Event delegation for checkbox clicks
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('checkbox')) {
+            const taskId = event.target.dataset.taskId;
+            toggleTaskStatus(taskId);
+        }
+    });
+
+    // Close panel functionality
+    closePanel.addEventListener('click', function() {
+        welcomeBlock.classList.remove('active');
+        expandedPanel.classList.remove('active');
+        completedTasksBox.classList.remove('expanded');
+    });
+
+    // Fetch tasks from backend with optional filter
+    function fetchTasks(filter = 'All') {
+        fetch(`http://localhost:5000/getTasks?filter=${filter}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(tasks => {
+                // Debug log to see task structure
+                console.log('Fetched Tasks:', tasks);
+                console.log('Current Filter:', filter);
+
+                // Calculate total and completed tasks
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.status === 'Completed').length;
+                
+                // Update progress circle
+                updateProgressCircle(totalTasks, completedTasks);
+
+                // Filter tasks based on the selected category
+                let filteredTasks = tasks;
+                switch(filter) {
+                    case 'All':
+                        filteredTasks = tasks.filter(task => task.status !== 'Completed');
+                        break;
+                    case 'Activity':
+                        // More robust filtering for Activity tasks
+                        filteredTasks = tasks.filter(task => 
+                            task.type && 
+                            task.type.toLowerCase() === 'activity' && 
+                            task.status !== 'Completed'
+                        );
+                        break;
+                    case 'Urgent':
+                        // Enhanced Urgent task filtering with detailed logging
+                        filteredTasks = tasks.filter(task => {
+                            // Log each task for debugging
+                            console.log('Checking Urgent Task:', task);
+
+                            // Exclude completed tasks
+                            if (task.status === 'Completed') return false;
+
+                            const now = new Date();
+
+                            // Check if task has a date
+                            if (task.date) {
+                                const taskDate = new Date(task.date);
+                                const today = new Date();
+                                const tomorrow = new Date(today);
+                                tomorrow.setDate(today.getDate() + 1);
+
+                                // Consider tasks for today or tomorrow as urgent
+                                if (
+                                    taskDate.toDateString() === today.toDateString() || 
+                                    taskDate.toDateString() === tomorrow.toDateString()
+                                ) {
+                                    console.log('Urgent Task Found (By Date):', task);
+                                    return true;
+                                }
+                            }
+
+                            // If task has a reminder time for daily tasks
+                            if (task.isDaily && task.reminderTime) {
+                                console.log('Daily Task with Reminder:', task);
+                                return true;
+                            }
+
+                            // For tasks with specific time
+                            if (task.date && task.time) {
+                                const taskDateTime = new Date(`${task.date}T${task.time}`);
+                                const timeDiff = taskDateTime - now;
+                                const urgentTimeWindow = 4 * 60 * 60 * 1000; // 4 hours
+
+                                if (timeDiff > 0 && timeDiff <= urgentTimeWindow) {
+                                    console.log('Urgent Task Found (By Time):', task);
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        });
+
+                        // Optional: Sort urgent tasks by proximity to current time
+                        filteredTasks.sort((a, b) => {
+                            const getTaskTime = (task) => {
+                                if (task.isDaily && task.reminderTime) {
+                                    const [hours, minutes] = task.reminderTime.split(':').map(Number);
+                                    const taskTime = new Date();
+                                    taskTime.setHours(hours, minutes, 0, 0);
+                                    return taskTime;
+                                }
+                                if (task.date && task.time) {
+                                    return new Date(`${task.date}T${task.time}`);
+                                }
+                                return new Date(task.date);
+                            };
+                            
+                            return getTaskTime(a) - getTaskTime(b);
+                        });
+
+                        console.log('Filtered Urgent Tasks:', filteredTasks);
+                        break;
+                    case 'Completed':
+                        filteredTasks = tasks.filter(task => task.status === 'Completed');
+                        break;
+                }
+
+                // Clear existing tasks
+                taskList.innerHTML = '';
+                completedTasksList.innerHTML = '';
+
+                // Reset panels
+                welcomeBlock.classList.remove('active');
+                expandedPanel.classList.remove('active');
+
+                // Populate task lists
+                filteredTasks.forEach(task => {
+                    // Determine due display based on daily or non-daily task
+                    let dueDateClass = 'due-later';
+                    let dueDateText = 'Later';
+                    
+                    if (task.isDaily) {
+                        if (task.reminderTime) {
+                            const formattedTime = new Date(`2000-01-01T${task.reminderTime}`).toLocaleTimeString('en-US', {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+                            
+                            dueDateText = formattedTime;
+                            dueDateClass = 'due-daily';
+                        }
+                    } else {
+                        if (task.date) {
+                            const taskDate = new Date(task.date);
+                            const today = new Date();
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(today.getDate() + 1);
+
+                            if (taskDate.toDateString() === today.toDateString()) {
+                                dueDateClass = 'due-today';
+                                dueDateText = 'Today';
+                            } else if (taskDate.toDateString() === tomorrow.toDateString()) {
+                                dueDateClass = 'due-tomorrow';
+                                dueDateText = 'Tomorrow';
+                            } else {
+                                dueDateText = taskDate.toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric' 
+                                });
+                            }
+                        }
+                    }
+
+                    // Determine task type/time display
+                    const taskTypeClass = task.isDaily ? 'daily-task' : 'scheduled-task';
+                    const taskTypeText = task.isDaily ? 'Daily' : 'Scheduled';
+
+                    // Create task item
+                    const taskItem = document.createElement('div');
+                    taskItem.classList.add('task-item');
+                    taskItem.dataset.taskId = task.id;
+                    taskItem.dataset.taskType = task.type;
+                    taskItem.dataset.taskStatus = task.status;
+                    taskItem.innerHTML = `
+                        <div class="task-name">${task.name}</div>
+                        <div class="task-category">${task.type}</div>
+                        <div class="task-type-indicator ${taskTypeClass}">
+                            ${taskTypeText}
+                        </div>
+                        <div class="due-date ${dueDateClass}">${dueDateText}</div>
+                        <div class="checkbox ${task.status === 'Completed' ? 'checked' : ''}" data-task-id="${task.id}"></div>
+                    `;
+
+                    // Append to appropriate list based on task status
+                    if (task.status === 'Completed') {
+                        completedTasksList.appendChild(taskItem);
+                    } else {
+                        taskList.appendChild(taskItem);
+                    }
+                });
+
+                // Update completed tasks count
+                const completedTasksCount = tasks.filter(task => task.status === 'Completed').length;
+                document.querySelector('.category-button[data-filter="Completed"] .category-button-count').textContent = `${completedTasksCount} tasks`;
+
+                // Open expanded panel when tasks are populated
+                if (filteredTasks.length > 0 && filter !== 'Completed') {
+                    welcomeBlock.classList.add('active');
+                    expandedPanel.classList.add('active');
+                }
+
+                // Special handling for Completed tasks
+                if (filter === 'Completed') {
+                    completedTasksBox.classList.add('expanded');
+                } else {
+                    completedTasksBox.classList.remove('expanded');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching tasks:', error);
+                taskList.innerHTML = `
+                    <div class="error-message">
+                        Unable to load tasks. Please try again later.
+                    </div>
+                `;
+            });
+    }
+    
+    // Category Button Filtering
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Fetch tasks with selected filter
+            const filter = this.dataset.filter;
+            fetchTasks(filter);
+        });
+    });
+
+    // Initial task fetch with 'All' filter
+    fetchTasks('All');
+});
+    </script>
+</body>
+</html>

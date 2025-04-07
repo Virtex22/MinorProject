@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .task-form {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .radio-group {
+            margin: 10px 0;
+        }
+        .radio-group label {
+            font-weight: normal;
+            display: inline;
+            margin-left: 8px;
+            margin-right: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #daily-options, #non-daily-options {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .hidden {
+            display: none;
+        }
+        .home-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .home-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .home-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Task</h1>
+    <div class="task-form">
+        <div class="form-group">
+            <label for="taskName">Task Name:</label>
+            <input type="text" id="taskName" placeholder="Enter task name">
+        </div>
+
+        <div class="form-group">
+            <label for="taskType">Task Type:</label>
+            <select id="taskType">
+                <option value="" disabled selected>Select task type</option>
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="occasional">Occasional</option>
+                <option value="activity">Activity</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Is this a daily task?</label>
+            <div class="radio-group">
+                <input type="radio" id="dailyYes" name="isDaily" value="yes">
+                <label for="dailyYes">Yes</label>
+                <input type="radio" id="dailyNo" name="isDaily" value="no">
+                <label for="dailyNo">No</label>
+            </div>
+        </div>
+
+        <div id="daily-options" class="hidden">
+            <div class="form-group">
+                <label for="dailyTime">Daily Reminder Time:</label>
+                <input type="time" id="dailyTime">
+            </div>
+        </div>
+
+        <div id="non-daily-options" class="hidden">
+            <div class="form-group">
+                <label for="taskDate">Task Date:</label>
+                <input type="date" id="taskDate">
+            </div>
+            <div class="form-group">
+                <label for="taskTime">Task Time:</label>
+                <input type="time" id="taskTime">
+            </div>
+        </div>
+
+        <button type="button" id="addTaskBtn">Add Task</button>
+    </div>
+    
+    <div class="home-link">
+        <a href="mainpage.html">Return to Home Page</a>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Element References
+    const taskForm = document.querySelector('.task-form');
+    const taskNameInput = document.getElementById('taskName');
+    const taskTypeSelect = document.getElementById('taskType');
+    const dailyRadioYes = document.getElementById('dailyYes');
+    const dailyRadioNo = document.getElementById('dailyNo');
+    const dailyOptions = document.getElementById('daily-options');
+    const nonDailyOptions = document.getElementById('non-daily-options');
+    const dailyTimeInput = document.getElementById('dailyTime');
+    const taskDateInput = document.getElementById('taskDate');
+    const taskTimeInput = document.getElementById('taskTime');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+
+    // Validation Functions
+    function validateInput(input, errorMessage) {
+        const value = input.value.trim();
+        if (!value) {
+            showError(input, errorMessage);
+            return false;
+        }
+        clearError(input);
+        return true;
+    }
+
+    function validateTaskName() {
+        return validateInput(
+            taskNameInput, 
+            'Please enter a task name'
+        );
+    }
+
+    function validateTaskType() {
+        return validateInput(
+            taskTypeSelect, 
+            'Please select a task type'
+        );
+    }
+
+    function validateDailyStatus() {
+        if (!dailyRadioYes.checked && !dailyRadioNo.checked) {
+            showError(dailyRadioYes, 'Please select whether this is a daily task');
+            return false;
+        }
+        clearError(dailyRadioYes);
+        return true;
+    }
+
+    function validateDailyTask() {
+        if (dailyRadioYes.checked) {
+            return validateInput(
+                dailyTimeInput, 
+                'Please set a daily reminder time'
+            );
+        }
+        return true;
+    }
+
+    function validateNonDailyTask() {
+        if (dailyRadioNo.checked) {
+            const dateValid = validateInput(
+                taskDateInput, 
+                'Please select a task date'
+            );
+            const timeValid = validateInput(
+                taskTimeInput, 
+                'Please select a task time'
+            );
+            return dateValid && timeValid;
+        }
+        return true;
+    }
+
+    // Error Handling Functions
+    function showError(element, message) {
+        // Remove any existing error
+        clearError(element);
+        
+        // Create error message element
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-message';
+        errorElement.style.color = 'red';
+        errorElement.style.fontSize = '0.8em';
+        errorElement.style.marginTop = '5px';
+        errorElement.textContent = message;
+        
+        // Insert error message after the element
+        element.parentNode.insertBefore(errorElement, element.nextSibling);
+        
+        // Highlight the input
+        element.style.borderColor = 'red';
+    }
+
+    function clearError(element) {
+        // Remove error styling
+        element.style.borderColor = '';
+        
+        // Remove error message if it exists
+        const errorSibling = element.nextElementSibling;
+        if (errorSibling && errorSibling.classList.contains('error-message')) {
+            errorSibling.remove();
+        }
+    }
+
+    // Daily/Non-Daily Toggle
+    dailyRadioYes.addEventListener('change', function() {
+        if (this.checked) {
+            dailyOptions.classList.remove('hidden');
+            nonDailyOptions.classList.add('hidden');
+            
+            // Reset non-daily inputs
+            taskDateInput.value = '';
+            taskTimeInput.value = '';
+        }
+    });
+
+    dailyRadioNo.addEventListener('change', function() {
+        if (this.checked) {
+            nonDailyOptions.classList.remove('hidden');
+            dailyOptions.classList.add('hidden');
+            
+            // Reset daily inputs
+            dailyTimeInput.value = '';
+        }
+    });
+
+    // Task Submission Handler
+    addTaskBtn.addEventListener('click', function() {
+        // Validate all inputs
+        const validations = [
+            validateTaskName(),
+            validateTaskType(),
+            validateDailyStatus(),
+            validateDailyTask(),
+            validateNonDailyTask()
+        ];
+
+        // Check if all validations pass
+        if (validations.includes(false)) {
+            return;
+        }
+
+        // Prepare task details
+        const taskDetails = {
+            name: taskNameInput.value.trim(),
+            type: taskTypeSelect.value,
+            isDaily: dailyRadioYes.checked
+        };
+
+        // Add additional details based on task type
+        if (taskDetails.isDaily) {
+            taskDetails.reminderTime = dailyTimeInput.value;
+        } else {
+            taskDetails.date = taskDateInput.value;
+            taskDetails.time = taskTimeInput.value;
+        }
+
+        // Detailed logging
+        console.log('Sending Task Data:', taskDetails);
+
+        // Send task to backend
+        fetch('http://localhost:5000/addTask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(taskDetails)
+        })
+        .then(response => {
+            // Log full response details
+            console.log('Response Status:', response.status);
+            console.log('Response Headers:', Object.fromEntries(response.headers));
+
+            // Check if response is ok
+            if (!response.ok) {
+                // Try to parse error response
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || 'Unknown server error');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Success handling
+            console.log('Server Response:', data);
+            alert(data.message || 'Task added successfully!');
+            resetForm();
+        })
+        .catch(error => {
+            // Comprehensive error handling
+            console.error('Task Submission Error:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack
+            });
+            alert(`Failed to add task: ${error.message}`);
+        });
+    });
+
+    // Form Reset Function
+    function resetForm() {
+        // Reset input values
+        taskNameInput.value = '';
+        taskTypeSelect.selectedIndex = 0;
+        dailyRadioYes.checked = false;
+        dailyRadioNo.checked = false;
+        dailyTimeInput.value = '';
+        taskDateInput.value = '';
+        taskTimeInput.value = '';
+
+        // Hide options sections
+        dailyOptions.classList.add('hidden');
+        nonDailyOptions.classList.add('hidden');
+
+        // Clear any existing errors
+        [
+            taskNameInput, 
+            taskTypeSelect, 
+            dailyRadioYes, 
+            dailyTimeInput, 
+            taskDateInput, 
+            taskTimeInput
+        ].forEach(clearError);
+    }
+});
+    </script>
+</body>
+</html>
